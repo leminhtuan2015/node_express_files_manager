@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <form ref='uploadForm'
+            id='uploadForm'
+            action='http://localhost:3000/'
+            method='post'
+            encType="multipart/form-data">
+                <input type="file" name="myFile" />
+                <input type='submit' value='Upload!' />
+        </form>
+    </body>
+</html>
+
+curl localhost:3000/x.pdf
+curl -i -X POST -H "Content-Type: multipart/form-data" -F "files=@/home/leminhtuan/Desktop/x.pdf" localhost:3000
+curl -XDELETE localhost:3000/x.pdf
