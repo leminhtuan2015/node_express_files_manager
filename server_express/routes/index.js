@@ -3,6 +3,8 @@ var fs = require("fs");
 var router = express.Router();
 var config = require('../config');
 var debug = require('debug')('server_express:server' + __dirname);
+var Firebase = require('firebase');
+var firebase = new Firebase(config.firebase.host);
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -49,6 +51,7 @@ router.post('/', function(req, res, next) {
 			res.send(JSON.stringify({status: config.status.ng}));
 		}
 		else {
+      firebase.update({files: config.status.file_uploaded})
 			res.send(JSON.stringify({status: config.status.ok}));
 		}
 	});
@@ -64,6 +67,7 @@ router.delete('/:fileName', function(req, res, next) {
       res.send(JSON.stringify({status: config.status.ng}));
     }
     else {
+      firebase.update({files: config.status.file_deleted})
       res.send(JSON.stringify({status: config.status.ok}));
     }
   });
