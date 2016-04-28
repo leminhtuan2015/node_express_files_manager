@@ -39,6 +39,7 @@ router.get('/:fileName', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  console.log(req.files)
   if (!req.files) {
 		res.send(JSON.stringify({status: config.status.no_fole}));
 		return;
