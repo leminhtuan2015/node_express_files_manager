@@ -51,7 +51,7 @@ router.post('/', function(req, res, next) {
 			res.send(JSON.stringify({status: config.status.ng}));
 		}
 		else {
-      firebase.update({files: fileName})
+      firebase.update({files: fileName+"upload"})
 			res.send(JSON.stringify({status: config.status.ok}));
 		}
 	});
@@ -67,7 +67,7 @@ router.delete('/:fileName', function(req, res, next) {
       res.send(JSON.stringify({status: config.status.ng}));
     }
     else {
-      firebase.update({files: fileName})
+      firebase.update({files: fileName+"delete"})
       res.send(JSON.stringify({status: config.status.ok}));
     }
   });
