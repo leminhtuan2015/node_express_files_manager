@@ -1,0 +1,70 @@
+println(Calendar.getInstance().getTime())
+var groupAttribute = candidatesAttribute.grouped(100000).toList
+
+var results1 = List.empty[Map[String, String]]
+var results2 = List.empty[Map[String, String]]
+var results3 = List.empty[Map[String, String]]
+var results4 = List.empty[Map[String, String]]
+
+println(Calendar.getInstance().getTime())
+// saveResults(results, fittingResultDAO.JOB, jobTarget.id)
+
+var f1 = Future {
+    println("1 startd" + Calendar.getInstance().getTime())
+  results1 = fitting(jobTarget, jobPoint, groupAttribute.lift(0).get)
+}
+
+var f2 = Future {
+  println("2 startd" + Calendar.getInstance().getTime())
+  results2 = fitting(jobTarget, jobPoint, groupAttribute.lift(1).get)
+}
+//
+// var f3 = Future {
+//   println("3 startd" + Calendar.getInstance().getTime())
+//   results3 = fitting(jobTarget, jobPoint, groupAttribute.lift(2).get)
+// }
+//
+// var f4 = Future {
+//   println("4 startd" + Calendar.getInstance().getTime())
+//   results4 = fitting(jobTarget, jobPoint, groupAttribute.lift(3).get)
+// }
+
+f1 onComplete {
+  case Success(r) => {
+    println("1 done" + Calendar.getInstance().getTime())
+    // checkAllDone(f2, f3, f4)
+  }
+  case Failure(t) => println(" 1An error has occured: " + t)
+}
+
+f2 onComplete {
+  case Success(r) =>{
+    println("2 done" + Calendar.getInstance().getTime())
+    // checkAllDone(f1, f3, f4)
+  }
+  case Failure(t) => println("2 An error has occured: " + t)
+}
+//
+// f3 onComplete {
+//   case Success(r) =>{
+//     println("3 done" + Calendar.getInstance().getTime())
+//     checkAllDone(f1, f2, f4)
+//   }
+//   case Failure(t) => println("3 An error has occured: " + t)
+// }
+//
+// f4 onComplete {
+//   case Success(r) =>{
+//     println("4 done" + Calendar.getInstance().getTime())
+//     checkAllDone(f1, f2, f3)
+//   }
+//   case Failure(t) => println("4 An error has occured: " + t)
+// }
+}
+
+def checkAllDone(f1: Future[Any], f2: Future[Any], f3: Future[Any]) = {
+if(f1.isCompleted && f2.isCompleted && f3.isCompleted){
+println("all done" + Calendar.getInstance().getTime())
+}
+
+}

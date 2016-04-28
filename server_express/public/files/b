@@ -1,0 +1,106 @@
+package controllers
+
+import play.api._
+import play.api.mvc._
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
+import logics.EntryLogic
+import logics.JobFittingLogic
+import logics.JsonAPI
+import daos.FittingResultDAO
+import daos.JobDAO
+import daos.CandidateDAO
+import models.Job
+import daos.JobFittingPermissionDAO
+import daos.Utility
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+import java.util.Calendar
+import models.Fittingable
+import scala.util.{Success, Failure}
+
+class JobFittingController extends Controller with ApplicationController{
+  private var jobDAO: JobDAO = new JobDAO()
+  private var candidateDAO: CandidateDAO = new CandidateDAO()
+  private var jobFittingPermissionDAO: JobFittingPermissionDAO = new JobFittingPermissionDAO()
+  private var fittingResultDAO: FittingResultDAO = new FittingResultDAO()
+
+  def create = Action(BodyParsers.parse.json) {request =>
+    val jsonData = request.body
+    var jobData: Map[String, String] = JsonAPI.extract(jsonData)
+    var id = Json.parse(jobData.get("id").get).as[String]
+    extractData(jobData)
+
+      var target = jobDAO.findWithTargetSetting(id)
+      var point = jobDAO.findWithPoints(id)
+      var candidates = candidateDAO.allWithAttributes()
+      futureFitting(target, point, candidates)
+
+    Ok("")
+  }
+
+  def futureFitting(target: Fittingable, point: Fittingable, candidates: List[Fittingable]) = {
+    var f1 = Future {
+        println("1 startd" + Calendar.getInstance().getTime())
+        var entryLogic = new JobFittingLogic(target, point, candidates.take(50000))
+        entryLogic.fit()
+    }
+
+    var f2 = Future {
+      println("2 startd" + Calendar.getInstance().getTime())
+      var entryLogic = new JobFittingLogic(target, point, candidates.take(50000))
+      entryLogic.fit()
+    }
+
+    var f3 = Future {
+        println("3 startd" + Calendar.getInstance().getTime())
+        var entryLogic = new JobFittingLogic(target, point, candidates.take(50000))
+        entryLogic.fit()
+    }
+
+    var f4 = Future {
+      println("4 startd" + Calendar.getInstance().getTime())
+      var entryLogic = new JobFittingLogic(target, point, candidates.take(50000))
+      entryLogic.fit()
+    }
+
+    f1 onComplete {
+      case Success(r) => {
+        println("1 done" + Calendar.getInstance().getTime())
+        checkAllDone(f2, f3, f4)
+      }
+      case Failure(t) => println(" 1An error has occured: " + t)
+    }
+
+    f2 onComplete {
+      case Success(r) =>{
+        println("2 done" + Calendar.getInstance().getTime())
+        checkAllDone(f1, f3, f4)
+      }
+      case Failure(t) => println("2 An error has occured: " + t)
+    }
+
+    f3 onComplete {
+      case Success(r) => {
+        println("3 done" + Calendar.getInstance().getTime())
+        checkAllDone(f1, f2, f4)
+      }
+      case Failure(t) => println(" 1An error has occured: " + t)
+    }
+
+    f4 onComplete {
+      case Success(r) =>{
+        println("4 done" + Calendar.getInstance().getTime())
+        checkAllDone(f1, f2, f3)
+      }
+      case Failure(t) => println("2 An error has occured: " + t)
+    }
+
+  }
+
+  def checkAllDone(f1: Future[Any], f2: Future[Any], f3: Future[Any]) = {
+    if(f1.isCompleted && f2.isCompleted && f3.isCompleted){
+      println("all done" + Calendar.getInstance().getTime())
+    }
+  }
+}
