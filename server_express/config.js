@@ -10,7 +10,7 @@ config.redis.port = 6379;
 config.web.port = process.env.WEB_PORT || 9980;
 config.firebase.host = 'https://files-manager.firebaseio.com/'
 
-config.database = '/home/leminhtuan/Nodejs/node_express_files_manager/server_express/public/files/';
+config.database = __dirname + '/public/files/';
 
 config.status.ok = 'ok'
 config.status.ng = 'ng'
