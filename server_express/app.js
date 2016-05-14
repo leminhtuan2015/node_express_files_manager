@@ -6,13 +6,15 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fileUpload = require('express-fileupload');
 
+// require modules.
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 
 var config = require('./config');
 var app = express();
 
-// view engine setup
+// set view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -26,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(fileUpload());
 
 app.use('/', routes);
-app.use('/users', users);
+// use file routes to handle the url
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
