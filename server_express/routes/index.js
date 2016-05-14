@@ -7,6 +7,8 @@ var Firebase = require('firebase');
 var firebase = new Firebase(config.firebase.host);
 
 /* GET home page. */
+
+// API get all file info 
 router.get('/', function(req, res, next) {
   fs.readdir(config.database, function(err, filesName){
     if (err){
@@ -26,6 +28,8 @@ router.get('/', function(req, res, next) {
   });
 });
 
+
+// API get one file by name
 router.get('/:fileName', function(req, res, next) {
   var fileName = req.params.fileName;
   console.log("fileName : " + fileName)
@@ -38,6 +42,8 @@ router.get('/:fileName', function(req, res, next) {
   });
 });
 
+
+// API upload one file
 router.post('/', function(req, res, next) {
   console.log(req.files)
   if (!req.files) {
@@ -58,6 +64,8 @@ router.post('/', function(req, res, next) {
 	});
 });
 
+
+// API delete file by name
 router.delete('/:fileName', function(req, res, next) {
   var fileName = req.params.fileName;
   console.log("fileName : " + fileName)
